@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset = "utf-8"/>
+  <title>tennis results 2013</title>
+  <script src="jquery.js" type="text/javascript"></script>
+  <script>
+    function clear()
+    {
+      location.reload();
+    }
+
+    $(document).ready(function()
+    {
+      $('#results').change(function()
+      {
+        // get name of player
+        var name_of_player = document.getElementById("psearch").value;
+        var similar_name = document.getElementById("similar_name").checked;
+        var same_name = document.getElementById("same_name").checked;
+        var no_name = document.getElementById("no_name").checked;
+
+        // get sets
+        var set_string = document.getElementById("ssearch").value;
+        var set_equals = document.getElementById("set_same").checked;
+        var set_greater_than = document.getElementById("set_greater_than").checked;
+        var set_less_than = document.getElementById("set_less_than").checked;
+
+        // get rounds
+        var round_string = document.getElementById("rsearch").value;
+        var round_equals = document.getElementById("round_same").checked;
+        var round_greater_than = document.getElementById("round_greater_than").checked;
+        var round_less_than = document.getElementById("round_less_than").checked;
+
+
+        // get all mens tennis results
+        if ($('#results').val() == 'man')
+        {
+          // looping through all tennis results
+          if((name_of_player == "enter name of player" || no_name == true) && set_string == "Enter Set Number" && round_string == "Enter Round Number")
+          {
+            //getting json data
+            $.getJSON("wimbledon-men-2013.json",{}, function(json)
+            {
+              var table_results = document.getElementById("tennis_results");
+              for (var current_match = 0; current_match < json.match.length; current_match++)
+              {
+                for (var player_no = 0; player_no < 2; player_no++)
+                {
+                  var row = table_results.insertRow(-1);
+                  var round = row.insertCell(0);
+                  var round_no  = document.createTextNode(json.match[current_match].round)
+                  round.append(round_no);
+                  var contestant = row.insertCell(1);
+                  player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                  contestant.append(player_name1);
+                  for (var no_sets = 2; no_sets < json.match[current_match].player[player_no].set.length + 2; no_sets++)
+                  {
+                    var current_set = row.insertCell(no_sets);
+                    var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 2]);
+                    current_set.append(set_num);
+                  }
+                }
+                var empty_row = table_results.insertRow(-1);
+                var empty_cell = document.createTextNode(".")
+                empty_row.append(empty_cell);
+              }
+            });
+          }
+          // looping through all reslts that match the user input for player name
+          else if ((name_of_player != "enter name of player" && similar_name == true) && set_string == "Enter Set Number" && round_string == "Enter Round Number")
+          {
+            $.getJSON("wimbledon-men-2013.json",{}, function(json)
+            {
+              var table_results = document.getElementById("tennis_results");
+              for (var current_match = 0; current_match < json.match.length; current_match++)
+              {
+                if (((json.match[current_match].player[0].name).includes(name_of_player)) || ((json.match[current_match].player[1].name).includes(name_of_player)))
+                {
+                  for (var player_no = 0; player_no < 2; player_no++)
+                  {
+                    var row = table_results.insertRow(-1);
+                    var round = row.insertCell(0);
+                    var round_no  = document.createTextNode(json.match[current_match].round)
+                    round.append(round_no);
+                    var contestant = row.insertCell(1);
+                    player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                    contestant.append(player_name1);
+                    for (var no_sets = 2; no_sets < json.match[current_match].player[player_no].set.length + 2; no_sets++)
+                    {
+                      var current_set = row.insertCell(no_sets);
+                      var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 2]);
+                      current_set.append(set_num);
+                    }
+                  }
+                  var empty_row = table_results.insertRow(-1);
+                  var empty_cell = document.createTextNode(".")
+                  empty_row.append(empty_cell);
+                }
+              }
+            });
+          }
+          // checking if the name is the same as the user input
+          else if ((name_of_player != "enter name of player" && same_name == true) && set_string == "Enter Set Number" && round_string == "Enter Round Number")
+          {
+            $.getJSON("wimbledon-men-2013.json",{}, function(json)
+            {
+              var table_results = document.getElementById("tennis_results");
+              for (var current_match = 0; current_match < json.match.length; current_match++)
+              {
+                if ((json.match[current_match].player[0].name == name_of_player) || (json.match[current_match].player[1].name == name_of_player))
+                {
+                  for (var player_no = 0; player_no < 2; player_no++)
+                  {
+                    var row = table_results.insertRow(-1);
+                    var round = row.insertCell(0);
+                    var round_no  = document.createTextNode(json.match[current_match].round)
+                    round.append(round_no);
+                    var contestant = row.insertCell(1);
+                    player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                    contestant.append(player_name1);
+                    for (var no_sets = 2; no_sets < json.match[current_match].player[player_no].set.length + 2; no_sets++)
+                    {
+                      var current_set = row.insertCell(no_sets);
+                      var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 2]);
+                      current_set.append(set_num);
+                    }
+                  }
+                  var empty_row = table_results.insertRow(-1);
+                  var empty_cell = document.createTextNode(".")
+                  empty_row.append(empty_cell);
+                }
+              }
+            });
+          }
+          // checking if the user selected nothing for the name
+          else if (name_of_player != "enter name of player" && same_name == false && similar_name == false)
+          {
+            console.log("invalid name option");
+            alert("Invalid Selection");
+          }
+          // looping through the results with the sets the user wishes to query
+          else if((name_of_player == "enter name of player" || no_name == true) && set_string != "Enter Set Number" && round_string == "Enter Round Number")
+          {
+            var set_int = Number(set_string);
+            if (isNaN(set_int) == false)
+            {
+              // checking if the set is equal to user input
+              if (set_equals == true)
+              {
+                $.getJSON("wimbledon-men-2013.json",{}, function(json)
+                {
+                  var table_results = document.getElementById("tennis_results");
+                  for (var current_match = 0; current_match < json.match.length; current_match++)
+                  {
+                    for (var player_no = 0; player_no < 2; player_no++)
+                    {
+                      var row = table_results.insertRow(-1);
+                      var round = row.insertCell(0);
+                      var round_no  = document.createTextNode(json.match[current_match].round)
+                      round.append(round_no);
+                      var contestant = row.insertCell(1);
+                      player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                      contestant.append(player_name1);
+                      for (var no_sets = 0; no_sets <= set_int; no_sets++)
+                      {
+                        if (no_sets != set_int)
+                        {
+                          var empty_set_contents = document.createTextNode(".");
+                          var empty_set_cell = row.insertCell(no_sets + 2);
+                          empty_set_cell.append(empty_set_contents);
+                        }
+                        else
+                        {
+                          var current_set = row.insertCell(set_int + 1);
+                          var set_num = document.createTextNode(json.match[current_match].player[player_no].set[set_int - 1]);
+                          current_set.append(set_num);
+                          break;
+                        }
+                      }
+                    }
+                    var empty_row = table_results.insertRow(-1);
+                    var empty_cell = document.createTextNode(".");
+                    empty_row.append(empty_cell);
+                  }
+                });
+              }
+                // checking if the set is greater than the user input
+              else if(set_greater_than == true)
+              {
+                $.getJSON("wimbledon-men-2013.json",{}, function(json)
+                {
+                  var table_results = document.getElementById("tennis_results");
+                  for (var current_match = 0; current_match < json.match.length; current_match++)
+                  {
+                    for (var player_no = 0; player_no < 2; player_no++)
+                    {
+                      var row = table_results.insertRow(-1);
+                      var round = row.insertCell(0);
+                      var round_no  = document.createTextNode(json.match[current_match].round)
+                      round.append(round_no);
+                      var contestant = row.insertCell(1);
+                      player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                      contestant.append(player_name1);
+                      for (var no_sets = 0; no_sets <= json.match[current_match].player[player_no].set.length; no_sets++)
+                      {
+
+                        if (no_sets <= set_int)
+                        {
+                          var empty_set_contents = document.createTextNode(".");
+                          var empty_set_cell = row.insertCell(no_sets + 2);
+                          empty_set_cell.append(empty_set_contents);
+                        }
+                        else if (no_sets >= set_int)
+                        {
+                          var current_set = row.insertCell(no_sets + 1);
+                          var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 1]);
+                          current_set.append(set_num);
+                        }
+                      }
+                    }
+                    var empty_row = table_results.insertRow(-1);
+                    var empty_cell = document.createTextNode(".");
+                    empty_row.append(empty_cell);
+                  }
+                });
+              }
+                // checking if set is less than the user input
+              else if (set_less_than == true)
+              {
+                $.getJSON("wimbledon-men-2013.json",{}, function(json)
+                {
+                  var table_results = document.getElementById("tennis_results");
+                  for (var current_match = 0; current_match < json.match.length; current_match++)
+                  {
+                    for (var player_no = 0; player_no < 2; player_no++)
+                    {
+                      var row = table_results.insertRow(-1);
+                      var round = row.insertCell(0);
+                      var round_no  = document.createTextNode(json.match[current_match].round)
+                      round.append(round_no);
+                      var contestant = row.insertCell(1);
+                      player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                      contestant.append(player_name1);
+                      for (var no_sets = 2; no_sets < json.match[current_match].player[player_no].set.length + 2; no_sets++)
+                      {
+                        if(no_sets <= set_int){
+                          var current_set = row.insertCell(no_sets);
+                          var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 2]);
+                          current_set.append(set_num);
+                        }
+                        else
+                        {
+                          break;
+                        }
+                      }
+                    }
+                    var empty_row = table_results.insertRow(-1);
+                    var empty_cell = document.createTextNode(".");
+                    empty_row.append(empty_cell);
+                  }
+                });
+              }
+                // error handling
+              else {
+                console.log("invalid set")
+                alert("Invalid Selection");
+              }
+            }
+            else
+            {
+              console.log("invalid set")
+              alert("Invalid Selection");
+            }
+          }
+          //looping through the round number the user wishes to query
+          else if ((name_of_player == "enter name of player" || no_name == true) && set_string == "Enter Set Number" && round_string != "Enter Round Number")
+          {
+            var table_results = document.getElementById("tennis results");
+            var round_int = Number(round_string);
+
+            // checking if the input is a valid number
+            if (isNaN(round_int) == false)
+            {
+              // checking if the round number is greater than the user input
+              if (round_greater_than == true)
+              {
+                $.getJSON("wimbledon-men-2013.json",{}, function(json)
+                {
+                  var table_results = document.getElementById("tennis_results");
+                  for (var current_match = 0; current_match < json.match.length; current_match++)
+                  {
+                    if (json.match[current_match].round >= round_int)
+                    {
+                      for (var player_no = 0; player_no < 2; player_no++)
+                      {
+                        var row = table_results.insertRow(-1);
+                        var round = row.insertCell(0);
+                        var round_no  = document.createTextNode(json.match[current_match].round)
+                        round.append(round_no);
+                        var contestant = row.insertCell(1);
+                        player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                        contestant.append(player_name1);
+                        for (var no_sets = 2; no_sets < json.match[current_match].player[player_no].set.length + 2; no_sets++)
+                        {
+                          var current_set = row.insertCell(no_sets);
+                          var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 2]);
+                          current_set.append(set_num);
+                        }
+                      }
+                      var empty_row = table_results.insertRow(-1);
+                      var empty_cell = document.createTextNode(".")
+                      empty_row.append(empty_cell);
+                    }
+                  }
+                });
+              }
+              else if (round_less_than == true)
+              {
+                {
+                  // checking if the round number is less than user input
+                  $.getJSON("wimbledon-men-2013.json",{}, function(json)
+                  {
+                    var table_results = document.getElementById("tennis_results");
+                    for (var current_match = 0; current_match < json.match.length; current_match++)
+                    {
+                      if (json.match[current_match].round <= round_int)
+                      {
+                        for (var player_no = 0; player_no < 2; player_no++)
+                        {
+                          var row = table_results.insertRow(-1);
+                          var round = row.insertCell(0);
+                          var round_no  = document.createTextNode(json.match[current_match].round)
+                          round.append(round_no);
+                          var contestant = row.insertCell(1);
+                          player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                          contestant.append(player_name1);
+                          for (var no_sets = 2; no_sets < json.match[current_match].player[player_no].set.length + 2; no_sets++)
+                          {
+                            var current_set = row.insertCell(no_sets);
+                            var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 2]);
+                            current_set.append(set_num);
+                          }
+                        }
+                        var empty_row = table_results.insertRow(-1);
+                        var empty_cell = document.createTextNode(".")
+                        empty_row.append(empty_cell);
+                      }
+                    }
+                  });
+                }
+              }
+              else if (round_equals == true)
+              {
+                {
+                  // checking if the round number is equal to user input
+                  $.getJSON("wimbledon-men-2013.json",{}, function(json)
+                  {
+                    var table_results = document.getElementById("tennis_results");
+                    for (var current_match = 0; current_match < json.match.length; current_match++)
+                    {
+                      if (json.match[current_match].round == round_int)
+                      {
+                        for (var player_no = 0; player_no < 2; player_no++)
+                        {
+                          var row = table_results.insertRow(-1);
+                          var round = row.insertCell(0);
+                          var round_no  = document.createTextNode(json.match[current_match].round)
+                          round.append(round_no);
+                          var contestant = row.insertCell(1);
+                          player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                          contestant.append(player_name1);
+                          for (var no_sets = 2; no_sets < json.match[current_match].player[player_no].set.length + 2; no_sets++)
+                          {
+                            var current_set = row.insertCell(no_sets);
+                            var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 2]);
+                            current_set.append(set_num);
+                          }
+                        }
+                        var empty_row = table_results.insertRow(-1);
+                        var empty_cell = document.createTextNode(".")
+                        empty_row.append(empty_cell);
+                      }
+                    }
+                  });
+                }
+              }
+                // error handling
+              else
+              {
+                console.log("invalid round");
+                alert("Invalid Selection");
+              }
+            }
+            else
+            {
+              console.log("invalid round");
+              alert("Invalid Selection");
+            }
+          }
+          else
+          {
+            alert("Invalid Selection");
+          }
+        }
+
+        //getting the table for womens results
+        else if ($('#results').val() == 'woman')
+        {
+          if ($('#results').val() == 'woman')
+          {
+            // looping through all tennis results
+            if((name_of_player == "enter name of player" || no_name == true) && set_string == "Enter Set Number" && round_string == "Enter Round Number")
+            {
+              //getting json data
+              $.getJSON("wimbledon-women-2013.json",{}, function(json)
+              {
+                var table_results = document.getElementById("tennis_results");
+                for (var current_match = 0; current_match < json.match.length; current_match++)
+                {
+                  for (var player_no = 0; player_no < 2; player_no++)
+                  {
+                    var row = table_results.insertRow(-1);
+                    var round = row.insertCell(0);
+                    var round_no  = document.createTextNode(json.match[current_match].round)
+                    round.append(round_no);
+                    var contestant = row.insertCell(1);
+                    player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                    contestant.append(player_name1);
+                    for (var no_sets = 2; no_sets < json.match[current_match].player[player_no].set.length + 2; no_sets++)
+                    {
+                      var current_set = row.insertCell(no_sets);
+                      var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 2]);
+                      current_set.append(set_num);
+                    }
+                  }
+                  var empty_row = table_results.insertRow(-1);
+                  var empty_cell = document.createTextNode(".")
+                  empty_row.append(empty_cell);
+                }
+              });
+            }
+            // looping through all results that match the user input for player name
+            else if ((name_of_player != "enter name of player" && similar_name == true) && set_string == "Enter Set Number" && round_string == "Enter Round Number")
+            {
+              $.getJSON("wimbledon-women-2013.json",{}, function(json)
+              {
+                var table_results = document.getElementById("tennis_results");
+                for (var current_match = 0; current_match < json.match.length; current_match++)
+                {
+                  if (((json.match[current_match].player[0].name).includes(name_of_player)) || ((json.match[current_match].player[1].name).includes(name_of_player)))
+                  {
+                    for (var player_no = 0; player_no < 2; player_no++)
+                    {
+                      var row = table_results.insertRow(-1);
+                      var round = row.insertCell(0);
+                      var round_no  = document.createTextNode(json.match[current_match].round)
+                      round.append(round_no);
+                      var contestant = row.insertCell(1);
+                      player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                      contestant.append(player_name1);
+                      for (var no_sets = 2; no_sets < json.match[current_match].player[player_no].set.length + 2; no_sets++)
+                      {
+                        var current_set = row.insertCell(no_sets);
+                        var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 2]);
+                        current_set.append(set_num);
+                      }
+                    }
+                    var empty_row = table_results.insertRow(-1);
+                    var empty_cell = document.createTextNode(".")
+                    empty_row.append(empty_cell);
+                  }
+                }
+              });
+            }
+            // checking if the name is the same as the user input
+            else if ((name_of_player != "enter name of player" && same_name == true) && set_string == "Enter Set Number" && round_string == "Enter Round Number")
+            {
+              $.getJSON("wimbledon-women-2013.json",{}, function(json)
+              {
+                var table_results = document.getElementById("tennis_results");
+                for (var current_match = 0; current_match < json.match.length; current_match++)
+                {
+                  if ((json.match[current_match].player[0].name == name_of_player) || (json.match[current_match].player[1].name == name_of_player))
+                  {
+                    for (var player_no = 0; player_no < 2; player_no++)
+                    {
+                      var row = table_results.insertRow(-1);
+                      var round = row.insertCell(0);
+                      var round_no  = document.createTextNode(json.match[current_match].round)
+                      round.append(round_no);
+                      var contestant = row.insertCell(1);
+                      player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                      contestant.append(player_name1);
+                      for (var no_sets = 2; no_sets < json.match[current_match].player[player_no].set.length + 2; no_sets++)
+                      {
+                        var current_set = row.insertCell(no_sets);
+                        var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 2]);
+                        current_set.append(set_num);
+                      }
+                    }
+                    var empty_row = table_results.insertRow(-1);
+                    var empty_cell = document.createTextNode(".")
+                    empty_row.append(empty_cell);
+                  }
+                }
+              });
+            }
+            // checking if the user selected nothing for the name
+            else if (name_of_player != "enter name of player" && same_name == false && similar_name == false)
+            {
+              console.log("invalid name option");
+              alert("Invalid Selection");
+            }
+            // looping through the results with the sets the user wishes to query
+            else if((name_of_player == "enter name of player" || no_name == true) && set_string != "Enter Set Number" && round_string == "Enter Round Number")
+            {
+              var set_int = Number(set_string);
+
+              // checking if the input is a valid number
+              if (isNaN(set_int) == false)
+              {
+                // checking if the user wishes to query set numbers equal to users input
+                if (set_equals == true)
+                {
+                  $.getJSON("wimbledon-women-2013.json",{}, function(json)
+                  {
+                    var table_results = document.getElementById("tennis_results");
+                    for (var current_match = 0; current_match < json.match.length; current_match++)
+                    {
+                      for (var player_no = 0; player_no < 2; player_no++)
+                      {
+                        var row = table_results.insertRow(-1);
+                        var round = row.insertCell(0);
+                        var round_no  = document.createTextNode(json.match[current_match].round)
+                        round.append(round_no);
+                        var contestant = row.insertCell(1);
+                        player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                        contestant.append(player_name1);
+                        for (var no_sets = 0; no_sets <= set_int; no_sets++)
+                        {
+                          if (no_sets != set_int)
+                          {
+                            var empty_set_contents = document.createTextNode(".");
+                            var empty_set_cell = row.insertCell(no_sets + 2);
+                            empty_set_cell.append(empty_set_contents);
+                          }
+                          else
+                          {
+                            var current_set = row.insertCell(set_int + 1);
+                            var set_num = document.createTextNode(json.match[current_match].player[player_no].set[set_int - 1]);
+                            current_set.append(set_num);
+                            break;
+                          }
+                        }
+                      }
+                      var empty_row = table_results.insertRow(-1);
+                      var empty_cell = document.createTextNode(".");
+                      empty_row.append(empty_cell);
+                    }
+                  });
+                }
+                  // checking if the user wishes to query set numbers greater than user input
+                else if(set_greater_than == true)
+                {
+                  $.getJSON("wimbledon-women-2013.json",{}, function(json)
+                  {
+                    var table_results = document.getElementById("tennis_results");
+                    for (var current_match = 0; current_match < json.match.length; current_match++)
+                    {
+                      for (var player_no = 0; player_no < 2; player_no++)
+                      {
+                        var row = table_results.insertRow(-1);
+                        var round = row.insertCell(0);
+                        var round_no  = document.createTextNode(json.match[current_match].round)
+                        round.append(round_no);
+                        var contestant = row.insertCell(1);
+                        player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                        contestant.append(player_name1);
+                        for (var no_sets = 0; no_sets <= json.match[current_match].player[player_no].set.length; no_sets++)
+                        {
+
+                          if (no_sets <= set_int)
+                          {
+                            var empty_set_contents = document.createTextNode(".");
+                            var empty_set_cell = row.insertCell(no_sets + 2);
+                            empty_set_cell.append(empty_set_contents);
+                          }
+                          else if (no_sets >= set_int)
+                          {
+                            var current_set = row.insertCell(no_sets + 1);
+                            var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 1]);
+                            current_set.append(set_num);
+                          }
+                        }
+                      }
+                      var empty_row = table_results.insertRow(-1);
+                      var empty_cell = document.createTextNode(".");
+                      empty_row.append(empty_cell);
+                    }
+                  });
+                }
+                  // checking if user wishes to query set numbers less than input
+                else if (set_less_than == true)
+                {
+                  $.getJSON("wimbledon-women-2013.json",{}, function(json)
+                  {
+                    var table_results = document.getElementById("tennis_results");
+                    for (var current_match = 0; current_match < json.match.length; current_match++)
+                    {
+                      for (var player_no = 0; player_no < 2; player_no++)
+                      {
+                        var row = table_results.insertRow(-1);
+                        var round = row.insertCell(0);
+                        var round_no  = document.createTextNode(json.match[current_match].round)
+                        round.append(round_no);
+                        var contestant = row.insertCell(1);
+                        player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                        contestant.append(player_name1);
+                        for (var no_sets = 2; no_sets < json.match[current_match].player[player_no].set.length + 2; no_sets++)
+                        {
+                          if(no_sets <= set_int){
+                            var current_set = row.insertCell(no_sets);
+                            var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 2]);
+                            current_set.append(set_num);
+                          }
+                          else
+                          {
+                            break;
+                          }
+                        }
+                      }
+                      var empty_row = table_results.insertRow(-1);
+                      var empty_cell = document.createTextNode(".");
+                      empty_row.append(empty_cell);
+                    }
+                  });
+                }
+                else {
+                  console.log("invalid set")
+                  alert("Invalid Selection");
+                }
+              }
+              else
+              {
+                console.log("invalid set")
+                alert("Invalid Selection");
+              }
+            }
+            //looping through the round number the user wishes to query
+            else if ((name_of_player == "enter name of player" || no_name == true) && set_string == "Enter Set Number" && round_string != "Enter Round Number")
+            {
+              var table_results = document.getElementById("tennis results");
+              var round_int = Number(round_string);
+              // checking if the input is a valid number
+              if (isNaN(round_int) == false)
+              {
+                // checking if the user has selected rounds greater than user input
+                if (round_greater_than == true)
+                {
+                  $.getJSON("wimbledon-women-2013.json",{}, function(json)
+                  {
+                    var table_results = document.getElementById("tennis_results");
+                    for (var current_match = 0; current_match < json.match.length; current_match++)
+                    {
+                      if (json.match[current_match].round >= round_int)
+                      {
+                        for (var player_no = 0; player_no < 2; player_no++)
+                        {
+                          var row = table_results.insertRow(-1);
+                          var round = row.insertCell(0);
+                          var round_no  = document.createTextNode(json.match[current_match].round)
+                          round.append(round_no);
+                          var contestant = row.insertCell(1);
+                          player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                          contestant.append(player_name1);
+                          for (var no_sets = 2; no_sets < json.match[current_match].player[player_no].set.length + 2; no_sets++)
+                          {
+                            var current_set = row.insertCell(no_sets);
+                            var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 2]);
+                            current_set.append(set_num);
+                          }
+                        }
+                        var empty_row = table_results.insertRow(-1);
+                        var empty_cell = document.createTextNode(".")
+                        empty_row.append(empty_cell);
+                      }
+                    }
+                  });
+                }
+                  // checking if the user has selected round less than the input
+                else if (round_less_than == true)
+                {
+                  {
+                    $.getJSON("wimbledon-women-2013.json",{}, function(json)
+                    {
+                      var table_results = document.getElementById("tennis_results");
+                      for (var current_match = 0; current_match < json.match.length; current_match++)
+                      {
+                        if (json.match[current_match].round <= round_int)
+                        {
+                          for (var player_no = 0; player_no < 2; player_no++)
+                          {
+                            var row = table_results.insertRow(-1);
+                            var round = row.insertCell(0);
+                            var round_no  = document.createTextNode(json.match[current_match].round)
+                            round.append(round_no);
+                            var contestant = row.insertCell(1);
+                            player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                            contestant.append(player_name1);
+                            for (var no_sets = 2; no_sets < json.match[current_match].player[player_no].set.length + 2; no_sets++)
+                            {
+                              var current_set = row.insertCell(no_sets);
+                              var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 2]);
+                              current_set.append(set_num);
+                            }
+                          }
+                          var empty_row = table_results.insertRow(-1);
+                          var empty_cell = document.createTextNode(".")
+                          empty_row.append(empty_cell);
+                        }
+                      }
+                    });
+                  }
+                }
+                  // checking if the user has selected equal rounds to input
+                else if (round_equals == true)
+                {
+                  {
+                    $.getJSON("wimbledon-women-2013.json",{}, function(json)
+                    {
+                      var table_results = document.getElementById("tennis_results");
+                      for (var current_match = 0; current_match < json.match.length; current_match++)
+                      {
+                        if (json.match[current_match].round == round_int)
+                        {
+                          for (var player_no = 0; player_no < 2; player_no++)
+                          {
+                            var row = table_results.insertRow(-1);
+                            var round = row.insertCell(0);
+                            var round_no  = document.createTextNode(json.match[current_match].round)
+                            round.append(round_no);
+                            var contestant = row.insertCell(1);
+                            player_name1 = document.createTextNode(json.match[current_match].player[player_no].name);
+                            contestant.append(player_name1);
+                            for (var no_sets = 2; no_sets < json.match[current_match].player[player_no].set.length + 2; no_sets++)
+                            {
+                              var current_set = row.insertCell(no_sets);
+                              var set_num = document.createTextNode(json.match[current_match].player[player_no].set[no_sets - 2]);
+                              current_set.append(set_num);
+                            }
+                          }
+                          var empty_row = table_results.insertRow(-1);
+                          var empty_cell = document.createTextNode(".")
+                          empty_row.append(empty_cell);
+                        }
+                      }
+                    });
+                  }
+                }
+                else
+                {
+                  console.log("invalid round");
+                  alert("Invalid Selection");
+                }
+              }
+              else
+              {
+                console.log("invalid round");
+                alert("Invalid Selection");
+              }
+            }
+            else
+            {
+              alert("Invalid Selection");
+            }
+          }
+
+        }
+
+        else
+        {
+          alert("Invalid Selection, nothing selected");
+          console.log("nothing selected");
+        }
+      });
+    });
+
+
+
+    //console.log(json);
+  </script>
+</head>
+
+<body>
+
+<h1> Wimbledon Tennis 2013 Results</h1>
+<h3>by Michael Shalaby</h3>
+<h3>user ID: mshala02</h3>
+
+<div id = "results_params">
+  <form id = "get_results">
+
+    <fieldset>
+      <legend>search for Tennis Player</legend>
+      Search for player: <input id ="psearch" type="text" name="pname" value="enter name of player" autocomplete="off"/>
+
+      <label>Enter Exact Player Name</label>
+      <input type="radio" id = "same_name" name="name_checker"  autocomplete="off"/>
+
+      <label>similar name of player</label>
+      <input type="radio" id = "similar_name" name="name_checker"  autocomplete="off"/>
+
+      <label>no name search</label>
+      <input type="radio" id = "no_name" name="name_checker"  autocomplete="off"/>
+    </fieldset>
+
+    <fieldset>
+      <legend>Enter Set Number</legend>
+      Search for Set: <input id ="ssearch" type="text" name="sname" value="Enter Set Number" autocomplete="off"/>
+
+      <label>Exact Set Number</label>
+      <input type="radio" id = "set_same" name="set_checker" autocomplete="off"/>
+
+      <label>Sets Greater Than</label>
+      <input type="radio" id = "set_greater_than" name="set_checker"  autocomplete="off"/>
+
+      <label>Sets Less Than</label>
+      <input type="radio" id = "set_less_than" name="set_checker"  autocomplete="off"/>
+    </fieldset>
+
+    <fieldset>
+      <legend>Enter Round Number</legend>
+      Search for Round: <input id ="rsearch" type="text" name="rname" value="Enter Round Number" autocomplete="off"/>
+
+      <label>Exact Round Number</label>
+      <input type="radio" id = "round_same" name="set_checker" autocomplete="off"/>
+
+      <label>Rounds Greater Than</label>
+      <input type="radio" id = "round_greater_than" name="set_checker"  autocomplete="off"/>
+
+      <label>Rounds Less Than</label>
+      <input type="radio" id = "round_less_than" name="set_checker" autocomplete="off"/>
+    </fieldset>
+
+    <fieldset>
+      <legend> Tornament </legend>
+      <select id = "results" autocomplete="off">
+        <option value="null">Select Results You Wish To View</option>
+        <option value="man">Men's Tennis Results</option>
+        <option value="woman">Women's Tennis Results</option>
+      </select>
+    </fieldset>
+  </form>
+</div>
+
+<div id = "table">
+  <button onclick="location.reload()">Clear results</button>
+  <table id = "tennis_results">
+    <thead>
+    <th>Round</th>
+    <th>Player</th>
+    <th>Set 1</th>
+    <th>Set 2</th>
+    <th>Set 3</th>
+    <th>Set 4</th>
+    <th>Set 5</th>
+    </thead>
+  </table>
+
+</div>
+</body>
+</html>
